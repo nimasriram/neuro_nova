@@ -1,0 +1,8 @@
+.ipynb_checkpoints/
+__pycache__/
+.DS_Store
+# datasets and model weights (large / licensed) - download separately
+data/
+*.h5
+*.keras
+*.pkl
