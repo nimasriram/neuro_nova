@@ -11,7 +11,7 @@ How can AI track the psychological impacts of isolation, stressful missions, and
 ## Approach
 
 **Task:**
-facial emotion recognition (image classification) with a Convolutional Neural Network (CNN)
+facial emotion recognition (image classification) by building a Convolutional Neural Network (CNN) called HR.DAYA
 
 **Datasets evaluated:**
 Chicago Face Database (CFD), high-resolution, diverse faces
@@ -23,8 +23,7 @@ label extraction from filenames, one-hot encoding, checking class skew (e.g., 59
 Python, TensorFlow/Keras, OpenCV, NumPy, pandas, scikit-learn, Matplotlib, Google Colab
 
 ## Repository contents
-| Path | What it is |
-|---|---|
+
 | `docs/Neuro_Nova_Research_Paper.docx` | Full research paper: background, literature review, methodology |
 | `PS_Model.ipynb`| Final model notebook (including audio exploration with librosa)
 
@@ -38,16 +37,30 @@ Final accuracy / validation results
 - A **Streamlit app** lets users capture an image, review the predicted emotion, and mark it correct or incorrect. Incorrect predictions are added to a dataset used for retraining.
 
 ## Limitations and next steps
+
 - The dataset had many more neutral images than other emotions (label skew).
 - Training and validation loss was high, so the model may perform well on its own training data but not on real-world scenarios.
 - Next steps: improve accuracy and reduce training and validation loss.
 
 ## Running the notebooks
+
 The notebooks were written in Google Colab and mount Google Drive. To run them, download the datasets above, update the file paths near the top of each notebook, and install the libraries listed above.
 
 ## Data and licensing
+
 Datasets are not included in this repository. Please obtain them from their original sources under their own terms (Kaggle; Chicago Face Database, which is for research use).
+
+## Future research
+
+During this project, I did look into the potential to use pupil dialtion to determine the state of someone's mental health. Although it didn't result in anything, I am concerned that this may be somewhat unreliable. 
+
+Additionally, I attempted to utilize a dataset that had multiple frames of a person changing their expression. This may be more helpful for the scope of this project for future research. 
+
+Finally, with the advent of Meta glasses that have the ability to record individuals, creating a dataset through this device may be the most useful for this project. However this would require hours of recordings, and there are ethical concerns regarding the use of Meta glasses. If a person who is being recorded consents to being recorded, it may be useful as it may capture their natural expressions. One of the main limitations through the datasets was that all the images were staged and the expressions may have been exaggerated to some degree which has lead to some overfitting in the model. 
+
+Overall there are ethical concerns regarding the use of AI reading a human's facial expression. 
 
 
 ## Author
+
 Purnima Sriram
