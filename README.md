@@ -22,11 +22,6 @@ label extraction from filenames, one-hot encoding, checking class skew (e.g., 59
 **Tools:**
 Python, TensorFlow/Keras, OpenCV, NumPy, pandas, scikit-learn, Matplotlib, Google Colab
 
-## Repository contents
-
-| `docs/Neuro_Nova_Research_Paper.docx` | Full research paper: background, literature review, methodology |
-| `PS_Model.ipynb`| Final model notebook (including audio exploration with librosa)
-
 ## Results
 
 Final accuracy / validation results
