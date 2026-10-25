@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>HR.DAYA · Facial Emotion Classifier</title>
+<meta name="description" content="HR.DAYA is a convolutional neural network that classifies facial emotion from an image. Try it in your browser.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='12' fill='%237dd3fc'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/static/style.css">
+
+</head>
+<body>
+<a class="skip" href="#try">Skip to the analyzer</a>
+
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="#top">HR.DAYA</a>
+    <nav aria-label="Primary">
+      <a href="#how">How to use</a>
+      <a href="#try">Try it</a>
+      <a href="#model">Model</a>
+      <a href="#ethics">Ethics</a>
+      <a href="/docs">API docs</a>
+    </nav>
+    <span id="status" class="status" role="status"><i></i><span id="statusText">Checking</span></span>
+  </header>
+
+  <main id="top">
+    <div class="hero">
+      <p class="label">Neuro Nova | NASA HUNCH | Senior Capstone</p>
+      <h1>HR<span class="dot">.</span>DAYA</h1>
+      <p class="lead">A neural network that reads the emotion in a face photo and shows how confident it is<span class="cursor" aria-hidden="true"></span></p>
+      <div class="actions">
+        <a class="btn primary" href="#try">Try it now</a>
+        <a class="btn ghost" href="https://github.com/nimasriram/neuro_nova" target="_blank" rel="noopener">View on GitHub</a>
+      </div>
+    </div>
+
+    <section id="how" aria-labelledby="how-h">
+      <p class="label">Mission briefing</p>
+      <h2 id="how-h">How to use it</h2>
+      <p class="sub">No account or setup needed. It takes about ten seconds.</p>
+      <div class="steps">
+        <div class="step panel">
+          <div class="n">STEP 01</div>
+          <h3>Pick a photo</h3>
+          <p>Choose a clear, well-lit photo of one face looking toward the camera. JPG or PNG, up to 5 MB.</p>
+        </div>
+        <div class="step panel">
+          <div class="n">STEP 02</div>
+          <h3>Upload it</h3>
+          <p>Drag the photo into the box below, or click the box to browse your files. Then press <b>Analyze</b>.</p>
+        </div>
+        <div class="step panel">
+          <div class="n">STEP 03</div>
+          <h3>Read the result</h3>
+          <p>You’ll see the most likely emotion and a pie chart of how the model split its confidence across four emotions. A high percentage is not a guarantee.</p>
+        </div>
+      </div>
+      <p class="note">Photos are processed in memory and are not stored by this service. Only analyze photos of people who have agreed to it.</p>
+    </section>
+
+    <section id="try" aria-labelledby="try-h">
+      <p class="label">Emotion analyzer</p>
+      <h2 id="try-h">Try it</h2>
+      <p class="note">Model may perform better if the main focus is the face.</p>
+      <div class="panel mt-22">
+        <div class="bar"><span class="d"></span><span class="d"></span><span class="d"></span><span class="t">Analyzer · <span id="barState">Ready</span></span></div>
+        <div class="console-body">
+          <div class="col">
+            <label class="drop" id="drop">
+              <input type="file" id="file" accept="image/*" aria-label="Choose a face photo">
+              <img id="preview" alt="Preview of the photo you selected">
+              <div class="hint">
+                <strong>Drop a photo here</strong>
+                <span>or click to browse (JPG or PNG, up to 5 MB)</span>
+              </div>
+            </label>
+            <p class="filename" id="filename"></p>
+            <div class="row">
+              <button class="btn primary" id="analyze" disabled>Analyze</button>
+              <button class="btn ghost" id="reset" type="button">Clear</button>
+            </div>
+            <p class="error" id="error" role="alert"></p>
+          </div>
+          <div class="col" aria-live="polite">
+            <div class="empty" id="empty">Your results will appear here after you analyze a photo.</div>
+            <div class="result" id="result">
+              <p class="tag">Predicted emotion</p>
+              <p class="top-emotion" id="topEmotion"></p>
+              <p class="conf" id="topConf"></p>
+              <p class="unsure" id="unsure" hidden>The model isn’t very sure about this one.</p>
+              <div class="chart-row">
+                <div id="chart"></div>
+                <ul class="legend" id="legend"></ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="model" aria-labelledby="model-h">
+      <p class="label">Systems</p>
+      <h2 id="model-h">About the model</h2>
+      <p class="sub">A convolutional neural network (CNN) trained to sort faces into four emotions.</p>
+      <div class="grid">
+        <div class="card panel"><p class="k">Task</p><p>Facial emotion classification into four classes</p></div>
+        <div class="card panel"><p class="k">Emotions</p><p>Angry, Fearful, Happy, Neutral</p></div>
+        <div class="card panel"><p class="k">Input</p><p>Color image resized to 300 × 200 pixels</p></div>
+        <div class="card panel"><p class="k">Architecture</p><p>Three convolution and pooling blocks, one dense layer, softmax output</p></div>
+        <div class="card panel"><p class="k">Training data</p><p>Chicago Face Database, a set of posed studio photos</p></div>
+        <div class="card panel"><p class="k">Built with</p><p>TensorFlow and Keras, served with FastAPI</p></div>
+      </div>
+
+      <h2 class="mt-44">Accuracy</h2>
+      <p class="sub">Results from four training runs on the project’s dataset.</p>
+      <div class="stats">
+        <div class="stat panel"><b>83%</b><span>Best accuracy, after 15 epochs</span></div>
+        <div class="stat panel"><b>4</b><span>Training runs (10 and 15 epochs)</span></div>
+        <div class="stat panel"><b>4</b><span>Emotion classes</span></div>
+      </div>
+      <div class="runs panel">
+        <div class="run"><span>First runs</span><div class="track"><div class="fill w-60"></div></div><span class="v">54–60%</span></div>
+        <div class="run"><span>Later runs</span><div class="track"><div class="fill w-79"></div></div><span class="v">74–79%</span></div>
+        <div class="run"><span>Best run</span><div class="track"><div class="fill w-83"></div></div><span class="v">83%</span></div>
+      </div>
+      <p class="note">These numbers come from posed studio photos, so expect lower accuracy on everyday photos. Training and validation loss stayed high, a sign the model may not generalize well.</p>
+    </section>
+
+    <section id="ethics" aria-labelledby="ethics-h">
+      <p class="label">Read before you rely on it</p>
+      <h2 id="ethics-h">Ethical notes</h2>
+      <div class="ethics panel mt-22">
+        <ul>
+          <li>This is a research prototype. Do not use it for medical, mental-health, or hiring decisions.</li>
+          <li>A facial expression is not the same as a feeling. The model labels how a face looks, not what a person is experiencing.</li>
+          <li>It was trained on posed photos, and neutral faces dominated the data (597 of 1,207 images), so it can be biased toward “Neutral.”</li>
+          <li>Get consent before analyzing anyone’s photo.</li>
+          <li>Photos are processed in memory and not stored by this service.</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>Built by Purnima Sriram · Voyager Wellness capstone</span>
+    <span><a href="https://github.com/nimasriram/neuro_nova" target="_blank" rel="noopener">GitHub repository</a> · <a href="/docs">API docs</a></span>
+  </footer>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  // <pie-logic>
+  var EMOTIONS = {
+    A: { name: 'Angry',   color: '#fca5a5' },
+    F: { name: 'Fearful', color: '#c4b5fd' },
+    H: { name: 'Happy',   color: '#fde68a' },
+    N: { name: 'Neutral', color: '#7dd3fc' }
+  };
+  var ORDER = ['A', 'F', 'H', 'N'];
+
+  function polar(cx, cy, r, angle) {
+    return [cx + r * Math.cos(angle), cy + r * Math.sin(angle)];
+  }
+
+  function slicePath(cx, cy, r, start, end) {
+    var a = polar(cx, cy, r, start);
+    var b = polar(cx, cy, r, end);
+    var large = (end - start) > Math.PI ? 1 : 0;
+    return 'M ' + cx + ' ' + cy + ' L ' + a[0].toFixed(3) + ' ' + a[1].toFixed(3) +
+           ' A ' + r + ' ' + r + ' 0 ' + large + ' 1 ' + b[0].toFixed(3) + ' ' + b[1].toFixed(3) + ' Z';
+  }
+
+  function buildSlices(probs) {
+    var total = 0, i, code;
+    for (i = 0; i < ORDER.length; i++) total += Number(probs[ORDER[i]]) || 0;
+    if (!total) total = 1;
+    var angle = -Math.PI / 2;
+    var out = [];
+    for (i = 0; i < ORDER.length; i++) {
+      code = ORDER[i];
+      var p = (Number(probs[code]) || 0) / total;
+      if (p <= 0.0005) continue;
+      if (p >= 0.9995) { out.push({ code: code, p: p, full: true }); continue; }
+      var end = angle + p * 2 * Math.PI;
+      out.push({ code: code, p: p, d: slicePath(100, 100, 92, angle, end) });
+      angle = end;
+    }
+    return out;
+  }
+  // </pie-logic>
+
+  var NS = 'http://www.w3.org/2000/svg';
+  var MAX_BYTES = 5 * 1024 * 1024;
+  var $ = function (id) { return document.getElementById(id); };
+
+  var els = {
+    status: $('status'), statusText: $('statusText'), barState: $('barState'),
+    drop: $('drop'), file: $('file'), preview: $('preview'), filename: $('filename'),
+    analyze: $('analyze'), reset: $('reset'), error: $('error'),
+    empty: $('empty'), result: $('result'), topEmotion: $('topEmotion'), topConf: $('topConf'),
+    unsure: $('unsure'), chart: $('chart'), legend: $('legend')
+  };
+  var currentFile = null;
+
+  function setStatus(kind, text) {
+    els.status.className = 'status ' + kind;
+    els.statusText.textContent = text;
+  }
+
+  fetch('/health').then(function (r) { return r.json(); }).then(function (d) {
+    if (d && d.status === 'ok') setStatus('online', 'Model online'); else setStatus('offline', 'Offline');
+  }).catch(function () { setStatus('offline', 'Offline'); });
+
+  function showError(msg) { els.error.textContent = msg || ''; }
+
+  function clearResult() {
+    els.result.classList.remove('show');
+    els.empty.style.display = '';
+    els.chart.textContent = '';
+    els.legend.textContent = '';
+  }
+
+  function setFile(file) {
+    showError('');
+    clearResult();
+    els.barState.textContent = 'Ready';
+    if (!file) return;
+    if (!file.type || file.type.indexOf('image/') !== 0) {
+      showError('That file isn’t an image. Please choose a JPG or PNG.');
+      return;
+    }
+    if (file.size > MAX_BYTES) {
+      showError('That image is larger than 5 MB. Please choose a smaller one.');
+      return;
+    }
+    currentFile = file;
+    els.filename.textContent = file.name;
+    els.preview.src = URL.createObjectURL(file);
+    els.drop.classList.add('has-img');
+    els.analyze.disabled = false;
+  }
+
+  function resetAll() {
+    currentFile = null;
+    els.file.value = '';
+    els.preview.removeAttribute('src');
+    els.drop.classList.remove('has-img');
+    els.filename.textContent = '';
+    els.analyze.disabled = true;
+    showError('');
+    clearResult();
+    els.barState.textContent = 'Ready';
+  }
+
+  els.file.addEventListener('change', function () { setFile(els.file.files[0]); });
+  els.reset.addEventListener('click', resetAll);
+
+  ['dragenter', 'dragover'].forEach(function (ev) {
+    els.drop.addEventListener(ev, function (e) { e.preventDefault(); els.drop.classList.add('over'); });
+  });
+  ['dragleave', 'drop'].forEach(function (ev) {
+    els.drop.addEventListener(ev, function (e) { e.preventDefault(); els.drop.classList.remove('over'); });
+  });
+  els.drop.addEventListener('drop', function (e) {
+    var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+    if (f) setFile(f);
+  });
+
+  function renderResult(data) {
+    var probs = data.probabilities || {};
+    var best = EMOTIONS[data.label] ? EMOTIONS[data.label].name : (data.emotion || data.label);
+    var conf = Number(data.confidence) || 0;
+
+    els.topEmotion.textContent = best;
+    els.topConf.textContent = (conf * 100).toFixed(1) + '% confidence';
+    els.unsure.hidden = conf >= 0.5;
+
+    var slices = buildSlices(probs);
+    els.chart.textContent = '';
+    var svg = document.createElementNS(NS, 'svg');
+    svg.setAttribute('viewBox', '0 0 200 200');
+    svg.setAttribute('role', 'img');
+    var summary = ORDER.map(function (c) {
+      return EMOTIONS[c].name + ' ' + ((Number(probs[c]) || 0) * 100).toFixed(1) + '%';
+    }).join(', ');
+    svg.setAttribute('aria-label', 'Pie chart of emotion probabilities: ' + summary);
+
+    slices.forEach(function (s) {
+      var node;
+      if (s.full) {
+        node = document.createElementNS(NS, 'circle');
+        node.setAttribute('cx', '100'); node.setAttribute('cy', '100'); node.setAttribute('r', '92');
+      } else {
+        node = document.createElementNS(NS, 'path');
+        node.setAttribute('d', s.d);
+      }
+      node.setAttribute('fill', EMOTIONS[s.code].color);
+      node.setAttribute('stroke', '#0b1120');
+      node.setAttribute('stroke-width', '2');
+      var t = document.createElementNS(NS, 'title');
+      t.textContent = EMOTIONS[s.code].name + ': ' + (s.p * 100).toFixed(1) + '%';
+      node.appendChild(t);
+      svg.appendChild(node);
+    });
+    els.chart.appendChild(svg);
+
+    els.legend.textContent = '';
+    ORDER.slice().sort(function (a, b) { return (Number(probs[b]) || 0) - (Number(probs[a]) || 0); })
+      .forEach(function (c) {
+        var li = document.createElement('li');
+        var sw = document.createElement('span'); sw.className = 'sw'; sw.style.background = EMOTIONS[c].color;
+        var name = document.createElement('span'); name.textContent = EMOTIONS[c].name;
+        var pct = document.createElement('span'); pct.className = 'pct';
+        pct.textContent = ((Number(probs[c]) || 0) * 100).toFixed(1) + '%';
+        li.appendChild(sw); li.appendChild(name); li.appendChild(pct);
+        els.legend.appendChild(li);
+      });
+
+    els.empty.style.display = 'none';
+    els.result.classList.add('show');
+  }
+
+  els.analyze.addEventListener('click', function () {
+    if (!currentFile) return;
+    showError('');
+    els.analyze.disabled = true;
+    els.analyze.textContent = 'Analyzing…';
+    els.barState.textContent = 'Analyzing';
+
+    var fd = new FormData();
+    fd.append('file', currentFile);
+
+    fetch('/predict', { method: 'POST', body: fd })
+      .then(function (r) {
+        return r.json().catch(function () { return {}; }).then(function (body) {
+          if (!r.ok) throw new Error(typeof body.detail === 'string' ? body.detail : 'Something went wrong (error ' + r.status + ').');
+          return body;
+        });
+      })
+      .then(function (data) { renderResult(data); els.barState.textContent = 'Done'; })
+      .catch(function (err) {
+        showError(err instanceof TypeError ? 'Couldn’t reach the server. Make sure it is running.' : err.message);
+        els.barState.textContent = 'Error';
+      })
+      .then(function () {
+        els.analyze.disabled = false;
+        els.analyze.textContent = 'Analyze';
+      });
+  });
+})();
+</script>
+</body>
+</html>
